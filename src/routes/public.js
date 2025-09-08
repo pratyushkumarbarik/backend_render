@@ -21,7 +21,7 @@ router.get('/items', async (req, res) => {
 router.post('/report-item', upload.single('image'), async (req, res) => {
   try {
     const { studentName, branch, rollNo, itemName, description } = req.body;
-    const image = req.file ? fileUrl(req, req.file.filename) : null;
+    const image = req.file ? fileUrl(req.file.filename) : null;
 
     const reported = await ReportedItem.create({
       studentName,
