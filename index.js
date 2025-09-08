@@ -14,13 +14,21 @@ const app = express();
 
 // Enable CORS for your frontend (adjust domain as needed)
 app.use(cors({
-  origin: [
-    "https://frontend-vercel-sage.vercel.app",
-    "https://fontend-vercel-sage.vercel.app" // keep old just in case
-  ],
-  methods: ["GET", "POST", "PUT", "DELETE"],
+  // Allow your Vercel deployment(s)
+  origin: [/\.vercel\.app$/],
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   credentials: true,
+  allowedHeaders: [
+    "Content-Type",
+    "Authorization",
+    "Accept",
+    "X-Requested-With"
+  ],
+  exposedHeaders: ["Content-Type"],
 }));
+
+// Ensure Express responds to preflight for all routes
+app.options('*', cors());
 
 // Middleware for JSON and URL-encoded form data
 app.use(express.json());
