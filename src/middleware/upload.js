@@ -11,7 +11,7 @@ if (!fs.existsSync(uploadsPath)) {
 // Multer storage config
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, uploadsPath); // Save files in /uploads
+    cb(null, uploadsPath);
   },
   filename: function (req, file, cb) {
     const unique = Date.now() + '-' + Math.round(Math.random() * 1e9);
@@ -20,7 +20,7 @@ const storage = multer.diskStorage({
   },
 });
 
-// File filter (optional, only allow images)
+// Only allow image files
 const fileFilter = (req, file, cb) => {
   if (file.mimetype.startsWith('image/')) {
     cb(null, true);
@@ -31,10 +31,10 @@ const fileFilter = (req, file, cb) => {
 
 const upload = multer({ storage, fileFilter });
 
-// ✅ Generate full public URL for saved file
-function fileUrl(req, filename) {
-  // Use BASE_URL from environment variables (Render)
-  const baseUrl = process.env.BASE_URL || `${req.protocol}://${req.get('host')}`;
+// ✅ Full public URL for uploaded file
+function fileUrl(filename) {
+  if (!filename) return 'https://via.placeholder.com/400x300?text=No+Image';
+  const baseUrl = process.env.BASE_URL; // MUST be set in Render
   return `${baseUrl}/uploads/${filename}`;
 }
 
