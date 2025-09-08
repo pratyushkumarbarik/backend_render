@@ -12,21 +12,25 @@ const { router: authRouter } = require('./src/middleware/auth');
 
 const app = express();
 
-// Allow frontend from Vercel
+// Enable CORS for your frontend (adjust domain as needed)
 app.use(cors({
-  origin: ["https://fontend-vercel-sage.vercel.app"], 
+  origin: ["https://fontend-vercel-sage.vercel.app"],
   methods: ["GET", "POST", "PUT", "DELETE"],
-  credentials: true
+  credentials: true,
 }));
 
-// Middleware
+// Middleware for JSON and URL-encoded form data
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(morgan('dev'));
 
-// Serve uploads folder statically - updated path
-const uploadsPath = path.join(__dirname, 'uploads'); // corrected to 'uploads' at root level
-app.use('/uploads', express.static(uploadsPath));
+// Serve uploads directory statically with CORS headers
+const uploadsPath = path.join(__dirname, 'uploads');
+app.use('/uploads', express.static(uploadsPath, {
+  setHeaders: (res) => {
+    res.set('Access-Control-Allow-Origin', 'https://fontend-vercel-sage.vercel.app');
+  }
+}));
 
 // Root route
 app.get('/', (req, res) => {
@@ -36,17 +40,18 @@ app.get('/', (req, res) => {
 // Auth routes (login)
 app.use('/admin', authRouter);
 
-// Existing routes
+// Public and admin routes
 app.use('/', publicRoutes);
 app.use('/admin', adminRoutes);
 
 const PORT = process.env.PORT || 5000;
 
+// Start server with DB connection and admin seeding
 async function start() {
   console.log("Mongo URI:", process.env.MONGO_URI);
   try {
     await connectDatabase();
-    await seedAdmin(); // seed admin user at startup
+    await seedAdmin();
     app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
   } catch (err) {
     console.error('Failed to start server:', err);
