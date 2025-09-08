@@ -33,7 +33,7 @@ const upload = multer({ storage, fileFilter });
 
 // Return full public URL to image
 function fileUrl(filename) {
-  if (!filename) return 'https://backend-render-l8re.onrender.com/uploads/default.png'; // Your default
+  if (!filename) return 'https://backend-render-l8re.onrender.com/uploads/default.svg';
 
   const baseUrl = 'https://backend-render-l8re.onrender.com';
   return `${baseUrl}/uploads/${filename}`;
