@@ -29,7 +29,7 @@ router.post('/login', async (req, res) => {
 router.post('/add-item', authMiddleware, upload.single('image'), async (req, res) => {
 	try {
 		const { itemName, description, foundLocation } = req.body;
-		const image = req.file ? fileUrl(req, req.file.filename) : undefined;
+		const image = req.file ? fileUrl(req.file.filename) : undefined;
 		const item = await Item.create({ itemName, description, foundLocation, image, status: 'Available' });
 		res.status(201).json(item);
 	} catch (err) {
@@ -52,7 +52,7 @@ router.put('/items/:id/claim', authMiddleware, upload.single('idCardImage'), asy
 	try {
 		const { id } = req.params;
 		const { studentName, rollNo } = req.body;
-		const idCardImage = req.file ? fileUrl(req, req.file.filename) : undefined;
+		const idCardImage = req.file ? fileUrl(req.file.filename) : undefined;
 		const item = await Item.findByIdAndUpdate(
 			id,
 			{ status: 'Claimed', claimedBy: { studentName, rollNo, idCardImage } },
