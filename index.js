@@ -8,35 +8,32 @@ const { connectDatabase } = require('./src/config/db');
 const { seedAdmin } = require('./src/seed/admin');
 const publicRoutes = require('./src/routes/public');
 const adminRoutes = require('./src/routes/admin');
-const { router: authRouter } = require('./src/middleware/auth'); // ✅ updated auth.js
+const { router: authRouter } = require('./src/middleware/auth');
 
 const app = express();
 
-// ✅ Allow frontend from Vercel
+// Allow frontend from Vercel
 app.use(cors({
-  origin: ["https://fontend-vercel-sage.vercel.app"], // ✅ your Vercel domain
+  origin: ["https://fontend-vercel-sage.vercel.app"], 
   methods: ["GET", "POST", "PUT", "DELETE"],
   credentials: true
 }));
-
-app.use(cors());
-
 
 // Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(morgan('dev'));
 
-// ✅ Static uploads
-const uploadsPath = path.join(__dirname, 'src', 'uploads');
+// Serve uploads folder statically - updated path
+const uploadsPath = path.join(__dirname, 'uploads'); // corrected to 'uploads' at root level
 app.use('/uploads', express.static(uploadsPath));
 
-// ✅ Root route
+// Root route
 app.get('/', (req, res) => {
   res.send('Lost & Found API is running!');
 });
 
-// ✅ Auth routes (login)
+// Auth routes (login)
 app.use('/admin', authRouter);
 
 // Existing routes
@@ -49,7 +46,7 @@ async function start() {
   console.log("Mongo URI:", process.env.MONGO_URI);
   try {
     await connectDatabase();
-    await seedAdmin(); // seeds admin user at startup
+    await seedAdmin(); // seed admin user at startup
     app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
   } catch (err) {
     console.error('Failed to start server:', err);
