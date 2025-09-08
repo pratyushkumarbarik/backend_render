@@ -26,11 +26,8 @@ app.use(morgan('dev'));
 
 // Serve uploads directory statically with CORS headers
 const uploadsPath = path.join(__dirname, 'uploads');
-app.use('/uploads', express.static(uploadsPath, {
-  setHeaders: (res) => {
-    res.set('Access-Control-Allow-Origin', 'https://fontend-vercel-sage.vercel.app');
-  }
-}));
+app.use('/uploads', express.static(uploadsPath));
+
 
 // Root route
 app.get('/', (req, res) => {
