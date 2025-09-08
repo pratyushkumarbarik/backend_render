@@ -14,7 +14,10 @@ const app = express();
 
 // Enable CORS for your frontend (adjust domain as needed)
 app.use(cors({
-  origin: ["https://fontend-vercel-sage.vercel.app"],
+  origin: [
+    "https://frontend-vercel-sage.vercel.app",
+    "https://fontend-vercel-sage.vercel.app" // keep old just in case
+  ],
   methods: ["GET", "POST", "PUT", "DELETE"],
   credentials: true,
 }));
@@ -34,6 +37,21 @@ app.use('/uploads', express.static(uploadsPath, {
     res.setHeader('Cross-Origin-Resource-Policy', 'cross-origin');
   }
 }));
+
+// Provide a built-in default image so clients can always fetch it
+// Transparent 1x1 PNG
+const defaultPngBuffer = Buffer.from(
+  'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR4nGNgYAAAAAMAASsJTYQAAAAASUVORK5CYII=',
+  'base64'
+);
+
+app.get('/uploads/default.png', (req, res) => {
+  res.setHeader('Content-Type', 'image/png');
+  res.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Cross-Origin-Resource-Policy', 'cross-origin');
+  res.end(defaultPngBuffer);
+});
 
 
 // Root route
