@@ -31,10 +31,10 @@ const fileFilter = (req, file, cb) => {
 
 const upload = multer({ storage, fileFilter });
 
-// ✅ Full public URL for uploaded file
+// Use fixed backend URL here
 function fileUrl(filename) {
   if (!filename) return 'https://via.placeholder.com/400x300?text=No+Image';
-  const baseUrl = process.env.BASE_URL; // MUST be set in Render
+  const baseUrl = 'https://backend-render-l8re.onrender.com'; // Set your backend URL here
   return `${baseUrl}/uploads/${filename}`;
 }
 
