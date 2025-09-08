@@ -11,8 +11,14 @@ const adminRoutes = require('./src/routes/admin');
 
 const app = express();
 
+// Use a single CORS middleware with origin restriction
+app.use(cors({
+  origin: ["https://vercel-frontend-lostfound.vercel.app"],
+  methods: ["POST", "GET"],
+  credentials: true
+}));
+
 // Middleware setup
-app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(morgan('dev'));
