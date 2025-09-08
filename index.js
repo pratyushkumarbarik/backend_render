@@ -14,10 +14,13 @@ const app = express();
 
 // ✅ Allow frontend from Vercel
 app.use(cors({
-  origin: ["https://vercel-frontend-lostfound.vercel.app"],
-  methods: ["POST", "GET", "PUT", "DELETE"],
+  origin: ["https://fontend-vercel-sage.vercel.app"], // ✅ your Vercel domain
+  methods: ["GET", "POST", "PUT", "DELETE"],
   credentials: true
 }));
+
+app.use(cors());
+
 
 // Middleware
 app.use(express.json());
