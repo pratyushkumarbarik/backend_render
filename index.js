@@ -25,8 +25,15 @@ app.use(express.urlencoded({ extended: true }));
 app.use(morgan('dev'));
 
 // Serve uploads directory statically with CORS headers
-const uploadsPath = path.join(__dirname, 'uploads');
-app.use('/uploads', express.static(uploadsPath));
+// Files are saved to `server/src/uploads` by the upload middleware
+const uploadsPath = path.join(__dirname, 'src', 'uploads');
+app.use('/uploads', express.static(uploadsPath, {
+  setHeaders: (res) => {
+    // Allow cross-origin access for images and other static assets
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Cross-Origin-Resource-Policy', 'cross-origin');
+  }
+}));
 
 
 // Root route
