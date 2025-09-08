@@ -39,18 +39,31 @@ app.use('/uploads', express.static(uploadsPath, {
 }));
 
 // Provide a built-in default image so clients can always fetch it
-// Transparent 1x1 PNG
-const defaultPngBuffer = Buffer.from(
-  'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR4nGNgYAAAAAMAASsJTYQAAAAASUVORK5CYII=',
-  'base64'
-);
+// Visible SVG placeholder
+const defaultSvg = `<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="320" viewBox="0 0 512 320">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#e5e7eb"/>
+      <stop offset="100%" stop-color="#d1d5db"/>
+    </linearGradient>
+  </defs>
+  <rect width="512" height="320" fill="url(#g)"/>
+  <g fill="none" stroke="#6b7280" stroke-width="12" stroke-linecap="round" stroke-linejoin="round" transform="translate(156,76)">
+    <rect x="0" y="12" width="200" height="140" rx="12" ry="12"/>
+    <circle cx="66" cy="82" r="20"/>
+    <path d="M12 134 L84 76 L136 112 L188 64"/>
+  </g>
+  <text x="256" y="300" font-family="Arial, Helvetica, sans-serif" font-size="18" fill="#6b7280" text-anchor="middle">No image available</text>
+  Sorry, your browser does not support inline SVG.
+  </svg>`;
 
-app.get('/uploads/default.png', (req, res) => {
-  res.setHeader('Content-Type', 'image/png');
+app.get('/uploads/default.svg', (req, res) => {
+  res.setHeader('Content-Type', 'image/svg+xml');
   res.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Cross-Origin-Resource-Policy', 'cross-origin');
-  res.end(defaultPngBuffer);
+  res.end(defaultSvg);
 });
 
 
