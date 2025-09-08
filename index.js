@@ -8,31 +8,35 @@ const { connectDatabase } = require('./src/config/db');
 const { seedAdmin } = require('./src/seed/admin');
 const publicRoutes = require('./src/routes/public');
 const adminRoutes = require('./src/routes/admin');
+const { router: authRouter } = require('./src/middleware/auth'); // ✅ updated auth.js
 
 const app = express();
 
-// Use a single CORS middleware with origin restriction
+// ✅ Allow frontend from Vercel
 app.use(cors({
   origin: ["https://vercel-frontend-lostfound.vercel.app"],
-  methods: ["POST", "GET"],
+  methods: ["POST", "GET", "PUT", "DELETE"],
   credentials: true
 }));
 
-// Middleware setup
+// Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(morgan('dev'));
 
-// Serve uploads folder statically, matching multer upload destination
+// ✅ Static uploads
 const uploadsPath = path.join(__dirname, 'src', 'uploads');
 app.use('/uploads', express.static(uploadsPath));
 
-// Define a root route to respond to GET '/' requests to avoid 'Cannot GET /' error
+// ✅ Root route
 app.get('/', (req, res) => {
   res.send('Lost & Found API is running!');
 });
 
-// Attach routes
+// ✅ Auth routes (login)
+app.use('/admin', authRouter);
+
+// Existing routes
 app.use('/', publicRoutes);
 app.use('/admin', adminRoutes);
 
@@ -42,7 +46,7 @@ async function start() {
   console.log("Mongo URI:", process.env.MONGO_URI);
   try {
     await connectDatabase();
-    await seedAdmin();  // Ensure admin user is seeded at startup
+    await seedAdmin(); // seeds admin user at startup
     app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
   } catch (err) {
     console.error('Failed to start server:', err);
