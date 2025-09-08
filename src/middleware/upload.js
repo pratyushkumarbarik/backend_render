@@ -2,7 +2,7 @@ const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
 
-// Ensure uploads directory exists
+// Ensure uploads directory exists at root/uploads
 const uploadsPath = path.join(__dirname, '..', 'uploads');
 if (!fs.existsSync(uploadsPath)) {
   fs.mkdirSync(uploadsPath, { recursive: true });
@@ -31,13 +31,11 @@ const fileFilter = (req, file, cb) => {
 
 const upload = multer({ storage, fileFilter });
 
-// Generate full public URL for uploaded files
+// Return full public URL to image
 function fileUrl(filename) {
-  if (!filename) {
-    // Optional: replace with your own hosted default image URL instead of external placeholder
-    return 'https://via.placeholder.com/400x300?text=No+Image';
-  }
-  const baseUrl = 'https://backend-render-l8re.onrender.com'; // Your deployed backend URL
+  if (!filename) return 'https://backend-render-l8re.onrender.com/uploads/default.png'; // Your default
+
+  const baseUrl = 'https://backend-render-l8re.onrender.com';
   return `${baseUrl}/uploads/${filename}`;
 }
 
