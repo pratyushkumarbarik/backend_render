@@ -27,8 +27,7 @@ app.use(cors({
   exposedHeaders: ["Content-Type"],
 }));
 
-// Ensure Express responds to preflight for all routes (Express 5 requires a valid path)
-app.options('/*', cors());
+// Note: cors() above will automatically handle OPTIONS preflight for allowed origins in Express 5
 
 // Middleware for JSON and URL-encoded form data
 app.use(express.json());
